@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: movie-list-db
+    environment:
+      POSTGRES_DB: movie_list
+      POSTGRES_USER: movie_user
+      POSTGRES_PASSWORD: movie_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - movie-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: movie-list-backend
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://movie_user:movie_password@postgres:5432/movie_list
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - movie-network
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: movie-list-frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:3001/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - movie-network
+    command: npm start
+
+volumes:
+  postgres_data:
+
+networks:
+  movie-network:
+    driver: bridge
