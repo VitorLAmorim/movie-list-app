@@ -1,6 +1,12 @@
 # Movie List App
 
-Uma aplicação completa de lista de filmes favoritos com integração à API The Movie Database (TMDb), desenvolvida com React, Node.js e PostgreSQL.
+[![Deploy no Railway](https://img.shields.io/badge/Railway-Deploy%20Online-success?style=flat-square&logo=railway)](https://seu-link-do-railway.aqui)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Demonstração-red?style=flat-square&logo=youtube)](https://www.youtube.com/watch?v=seu-video-id)
+[![React](https://img.shields.io/badge/React-18.2.0-blue?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0.2-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+
+Uma aplicação completa de lista de filmes favoritos com integração à API The Movie Database (TMDb), desenvolvida com React, TypeScript e Tailwind CSS.
 
 ## 🎬 Sobre o Projeto
 
@@ -117,6 +123,28 @@ Após a inicialização completa, acesse:
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:3001
 - **Health Check**: http://localhost:3001/api/health
+
+## 🎥 Demonstração e Deploy
+
+### 🚀 Aplicação em Produção
+**[🔴 Teste a aplicação ao vivo no Railway](https://movie-list-app-production.up.railway.app/)**
+
+- URL: https://movie-list-app-production.up.railway.app/
+- Ambiente: Produção (Railway)
+- Status: ✅ Online e funcional
+
+### 📹 Vídeo de Demonstração
+**[🎬 Assista à demonstração completa no YouTube](https://youtu.be/MstIeiPDSck)**
+
+- Duração: 02:15 minutos
+- Conteúdo: Tour pela aplicação.
+- Tecnologias demonstradas: React, TypeScript, Tailwind CSS, Node.js
+
+### 🎯 O que você verá no vídeo:
+- ✅ Funcionalidades principais da aplicação
+- ✅ Sistema de autenticação e usuários
+- ✅ Busca e gerenciamento de favoritos
+- ✅ Sistema de compartilhamento de listas
 
 ## 📁 Estrutura do Projeto
 
