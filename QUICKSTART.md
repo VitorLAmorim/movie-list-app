@@ -53,7 +53,6 @@ cd frontend && npm start
 
 ## 📝 Notas Importantes
 
-- ✅ **SQLite** é usado por padrão (sem configuração adicional)
 - ✅ **Chave TMDb** obrigatória para funcionar
 - ✅ **Dados** são salvos localmente em `movie_list.db`
 - ✅ **Navegador**: Recomendado Chrome/Firefox

@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 3001
 
-CMD ["npm", "run", "dev"]
+# Usa variável de ambiente para decidir qual comando rodar
+# Railway usa NODE_ENV=production, docker-compose usa NODE_ENV=development
+CMD ["sh", "-c", "npm run ${NODE_ENV:-development}"]

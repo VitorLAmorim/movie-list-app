@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "Aplicação de lista de filmes favoritos",
   "scripts": {
+    "start": "cd frontend && npm start",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm start",
     "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "setup": "chmod +x scripts/setup-local.sh && ./scripts/setup-local.sh",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
     "build:backend": "cd backend && npm run build",
     "build:frontend": "cd frontend && npm run build",
-    "build": "npm run build:backend && npm run build:frontend"
+    "build": "npm run build:backend && npm run build:frontend",
+    "clean": "cd backend && npm run clean && cd ../frontend && rm -rf build node_modules package-lock.json && npm install"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"

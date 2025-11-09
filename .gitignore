@@ -77,7 +77,8 @@ dist
 
 # Gatsby files
 .cache/
-public
+# public (comentado para permitir frontend/public)
+# public
 
 # Storybook build outputs
 .out
@@ -184,5 +185,4 @@ build/
 dist/
 
 # Database
-*.sqlite
 *.db

@@ -7,7 +7,7 @@ Guia alternativo para rodar a aplicação sem Docker, ideal para desenvolvimento
 ### Pré-requisitos
 - Node.js 18+
 - npm
-- (Opcional) PostgreSQL para melhor experiência
+- PostgreSQL para melhor experiência
 
 ### 1. Instalação das Dependências
 
@@ -21,21 +21,25 @@ npm run install:all
 
 ### 2. Configurar Variáveis de Ambiente
 
-Copie o arquivo de ambiente:
+Copie o arquivo de ambiente da pasta backend:
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
 Edite o `.env.local`:
 ```env
-# OBRIGATÓRIO: Sua chave da API TMDb
-TMDB_API_KEY=sua_chave_tmdb_aqui
+# Database Configuration (PostgreSQL)
+DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 
-# Opcional: Para desenvolvimento, use SQLite (padrão)
-DATABASE_URL=sqlite:./movie_list.db
+# API Configuration
+TMDB_API_KEY=your_tmdb_api_key_here
 
-# Se tiver PostgreSQL local:
-# DATABASE_URL=postgresql://movie_user:movie_password@localhost:5432/movie_list
+# Server Configuration
+PORT=3001
+NODE_ENV=development
+
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:3000
 ```
 
 ### 3. Iniciar a Aplicação
@@ -59,14 +63,9 @@ npm run dev:frontend
 - Frontend: http://localhost:3000
 - Backend: http://localhost:3001
 
-## 🗄️ Opções de Banco de Dados
+## 🗄️ Banco de Dados PostgreSQL
 
-### Opção 1: SQLite (Recomendado para Desenvolvimento)
-- ✅ Sem instalação adicional
-- ✅ Arquivo único `movie_list.db`
-- ✅ Configuração automática
-
-### Opção 2: PostgreSQL Local
+### Opção 1: PostgreSQL Local (Recomendado para Desenvolvimento)
 ```bash
 # No Ubuntu/Debian
 sudo apt-get install postgresql postgresql-contrib
@@ -76,7 +75,7 @@ sudo -u postgres psql -c "ALTER USER movie_user PASSWORD 'movie_password';"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE movie_list TO movie_user;"
 ```
 
-### Opção 3: PostgreSQL Online (Gratuito)
+### Opção 2: PostgreSQL Online (Gratuito)
 - [Neon](https://neon.tech/) - PostgreSQL serverless gratuito
 - [Supabase](https://supabase.com/) - Firebase alternative com PostgreSQL
 - [ElephantSQL](https://www.elephantsql.com/) - PostgreSQL como serviço
