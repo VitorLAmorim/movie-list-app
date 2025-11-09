@@ -70,6 +70,8 @@ const HomePage = () => {
   }, [isLoggedIn, username]);
 
   // useEffect para carregar filmes com controle de execução
+  const searchParamsString = searchParams.toString();
+
   useEffect(() => {
     let isMounted = true;
 
@@ -111,7 +113,7 @@ const HomePage = () => {
     return () => {
       isMounted = false;
     };
-  }, [searchParams.toString()]); // Usar toString para evitar re-renders desnecessários
+  }, [searchParams, searchParamsString]); // Usar variável extraída para evitar warnings
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
