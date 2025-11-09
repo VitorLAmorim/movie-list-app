@@ -112,20 +112,6 @@ const SearchInput = styled.input`
   }
 `;
 
-const SearchIcon = styled(FiSearch)`
-  position: absolute;
-  left: ${({ theme }) => theme.spacing.lg};
-  top: 50%;
-  transform: translateY(-50%);
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 1.2rem;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    left: ${({ theme }) => theme.spacing.md};
-    font-size: 1rem;
-  }
-`;
-
 const SearchButton = styled.button`
   background-color: ${({ theme }) => theme.colors.primary};
   color: white;
@@ -379,7 +365,7 @@ const HomePage = () => {
     };
 
     loadMovies();
-  }, [searchParams.toString()]); // Usar toString para evitar re-renders desnecessários
+  }, [searchParams]);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
