@@ -1,203 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { FiHeart, FiCalendar, FiStar, FiUser, FiExternalLink, FiShare2, FiAlertCircle } from 'react-icons/fi';
 import MovieCard from '../components/MovieCard';
 import MovieModal from '../components/MovieModal';
 import { sharedAPI } from '../services/api';
-
-const SharedListPageContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const PageHeader = styled.div`
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.surface}, ${({ theme }) => theme.colors.background});
-  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.borderRadius.large};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-  text-align: center;
-`;
-
-const HeaderIcon = styled.div`
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto ${({ theme }) => theme.spacing.lg};
-`;
-
-const PageTitle = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    font-size: 2rem;
-  }
-`;
-
-const Username = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  font-size: 1.3rem;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-const ListMeta = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.xl};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  flex-wrap: wrap;
-`;
-
-const MetaItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const ShareInfo = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-  padding: ${({ theme }) => theme.spacing.md};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 0.9rem;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`;
-
-const ActionButtons = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  flex-wrap: wrap;
-`;
-
-interface ActionButtonProps {
-  variant?: 'primary' | 'secondary';
-}
-
-const ActionButton = styled(Link)<ActionButtonProps>`
-  background-color: ${({ theme, variant }) =>
-    variant === 'primary' ? theme.colors.primary : theme.colors.background
-  };
-  color: ${({ theme }) => theme.colors.text};
-  border: 1px solid ${({ theme, variant }) =>
-    variant === 'primary' ? theme.colors.primary : theme.colors.border
-  };
-  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  transition: all 0.2s ease;
-  text-decoration: none;
-
-  &:hover {
-    background-color: ${({ theme, variant }) =>
-      variant === 'primary' ? '#f40612' : theme.colors.surface
-    };
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-    font-size: 0.9rem;
-  }
-`;
-
-const MoviesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: ${({ theme }) => theme.spacing.lg};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: ${({ theme }) => theme.spacing.md};
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: ${({ theme }) => theme.spacing.sm};
-  }
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: ${({ theme }) => theme.spacing.xxl};
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const LoadingSpinner = styled.div`
-  width: 50px;
-  height: 50px;
-  border: 4px solid ${({ theme }) => theme.colors.border};
-  border-top: 4px solid ${({ theme }) => theme.colors.primary};
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-`;
-
-const ErrorMessage = styled.div`
-  background-color: ${({ theme }) => theme.colors.error};
-  color: white;
-  padding: ${({ theme }) => theme.spacing.xl};
-  border-radius: ${({ theme }) => theme.borderRadius.large};
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
-
-  h3 {
-    font-size: 1.5rem;
-    margin-bottom: ${({ theme }) => theme.spacing.md};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: ${({ theme }) => theme.spacing.sm};
-  }
-`;
-
-const EmptyState = styled.div`
-  text-align: center;
-  padding: ${({ theme }) => theme.spacing.xxl};
-  background-color: ${({ theme }) => theme.colors.surface};
-  border-radius: ${({ theme }) => theme.borderRadius.large};
-  border: 2px dashed ${({ theme }) => theme.colors.border};
-
-  h3 {
-    font-size: 1.5rem;
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-    color: ${({ theme }) => theme.colors.text};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: ${({ theme }) => theme.spacing.sm};
-  }
-
-  p {
-    color: ${({ theme }) => theme.colors.textSecondary};
-    margin-bottom: ${({ theme }) => theme.spacing.lg};
-  }
-`;
 
 const SharedListPage = () => {
   const { shareToken } = useParams<string>();
@@ -259,95 +65,99 @@ const SharedListPage = () => {
 
   if (loading) {
     return (
-      <SharedListPageContainer>
-        <LoadingContainer>
-          <LoadingSpinner />
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col items-center justify-center py-16 text-textSecondary">
+          <div className="w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin mb-6"></div>
           <p>Carregando lista compartilhada...</p>
-        </LoadingContainer>
-      </SharedListPageContainer>
+        </div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <SharedListPageContainer>
-        <ErrorMessage>
-          <h3>
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-error text-white px-8 py-8 rounded-large text-center max-w-lg mx-auto">
+          <h3 className="text-[1.5rem] mb-4 flex items-center justify-center gap-2">
             <FiAlertCircle size={24} />
             Link Inválido
           </h3>
-          <p>{error}</p>
-          <ActionButton to="/" variant="primary">
+          <p className="mb-6">{error}</p>
+          <Link
+            to="/"
+            className="inline-block bg-primary text-text border border-primary px-6 py-3 rounded-medium font-semibold cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-red-600 hover:transform hover:translate-y-[-2px] text-decoration-none text-center"
+          >
             Voltar para Página Inicial
-          </ActionButton>
-        </ErrorMessage>
-      </SharedListPageContainer>
+          </Link>
+        </div>
+      </div>
     );
   }
 
   return (
-    <SharedListPageContainer>
-      <PageHeader>
-        <HeaderIcon>
+    <div className="max-w-7xl mx-auto">
+      <div className="bg-gradient-to-br from-surface to-background px-8 py-8 rounded-large mb-8 text-center">
+        <div className="bg-gradient-to-br from-primary to-accent w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
           <FiShare2 size={40} color="white" />
-        </HeaderIcon>
-        <PageTitle>Lista Compartilhada</PageTitle>
-        <Username>
+        </div>
+        <h1 className="text-[2.5rem] font-bold text-text mb-2 sm:text-[2rem]">
+          Lista Compartilhada
+        </h1>
+        <div className="flex items-center justify-center gap-2 text-[1.3rem] text-primary mb-4">
           <FiUser size={20} />
           {sharedList.username}
-        </Username>
+        </div>
 
-        <ListMeta>
-          <MetaItem>
+        <div className="flex justify-center gap-8 mb-6 flex-wrap">
+          <div className="flex items-center gap-2 text-textSecondary">
             <FiHeart size={18} />
             {sharedList.totalMovies} filmes
-          </MetaItem>
-          <MetaItem>
+          </div>
+          <div className="flex items-center gap-2 text-textSecondary">
             <FiStar size={18} />
             {calculateAverageRating(sharedList.favorites)} média
-          </MetaItem>
-          <MetaItem>
+          </div>
+          <div className="flex items-center gap-2 text-textSecondary">
             <FiCalendar size={18} />
             Criada em {formatDate(sharedList.createdAt)}
-          </MetaItem>
-        </ListMeta>
+          </div>
+        </div>
 
-        <ShareInfo>
+        <div className="bg-background px-4 py-3 rounded-medium text-textSecondary text-sm mb-6">
           {sharedList.expiresAt ? (
             <span>Este link expira em {formatDate(sharedList.expiresAt)}</span>
           ) : (
             <span>Este link não expira</span>
           )}
-        </ShareInfo>
+        </div>
 
-        <ActionButtons>
-          <ActionButton to="/" variant="primary">
+        <div className="flex justify-center gap-4 flex-wrap">
+          <Link
+            to="/"
+            className="bg-primary text-text border border-primary px-6 py-3 rounded-medium font-semibold cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-red-600 hover:transform hover:translate-y-[-2px] text-decoration-none text-center"
+          >
             Criar Sua Própria Lista
-          </ActionButton>
-          <ActionButton
-            to="#"
-            variant="secondary"
-            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-              e.preventDefault();
-              handleShareLink();
-            }}
+          </Link>
+          <button
+            onClick={handleShareLink}
+            className="bg-background text-text border border-border px-6 py-3 rounded-medium font-semibold cursor-pointer flex items-center gap-2 transition-all duration-200 hover:bg-surface hover:transform hover:translate-y-[-2px] text-center"
           >
             <FiExternalLink size={18} />
             Compartilhar Link
-          </ActionButton>
-        </ActionButtons>
-      </PageHeader>
+          </button>
+        </div>
+      </div>
 
       {sharedList.favorites.length === 0 ? (
-        <EmptyState>
-          <h3>
+        <div className="text-center py-16 bg-surface rounded-large border-2 border-dashed border-border">
+          <h3 className="text-[1.5rem] mb-2 text-text flex items-center justify-center gap-2">
             <FiHeart size={32} />
             Lista Vazia
           </h3>
-          <p>{sharedList.username} ainda não adicionou nenhum filme à sua lista de favoritos.</p>
-        </EmptyState>
+          <p className="text-textSecondary mb-6">{sharedList.username} ainda não adicionou nenhum filme à sua lista de favoritos.</p>
+        </div>
       ) : (
-        <MoviesGrid>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-4">
           {sharedList.favorites.map((favorite: any) => (
             <MovieCard
               key={favorite.id}
@@ -368,7 +178,7 @@ const SharedListPage = () => {
               showActions={false}
             />
           ))}
-        </MoviesGrid>
+        </div>
       )}
 
       <MovieModal
@@ -376,7 +186,7 @@ const SharedListPage = () => {
         isOpen={!!selectedMovie}
         onClose={() => setSelectedMovie(null)}
       />
-    </SharedListPageContainer>
+    </div>
   );
 };
 

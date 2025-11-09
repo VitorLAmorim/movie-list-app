@@ -1,6 +1,5 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
 import { FiX, FiStar, FiCalendar, FiClock, FiUsers, FiPlay, FiHeart, FiPlus } from 'react-icons/fi';
 import { useUser } from '../hooks/useUser';
 import { favoritesAPI } from '../services/api';
@@ -14,273 +13,6 @@ interface MovieModalProps {
   isFavorite?: boolean;
   onFavoriteChange?: (isFavorite: boolean) => void;
 }
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: ${({ theme }) => theme.spacing.lg};
-`;
-
-const ModalContent = styled.div`
-  background-color: ${({ theme }) => theme.colors.surface};
-  border-radius: ${({ theme }) => theme.borderRadius.large};
-  max-width: 900px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  width: 100%;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    max-height: 100vh;
-    border-radius: 0;
-    max-width: 100%;
-  }
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: ${({ theme }) => theme.spacing.md};
-  right: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.error};
-    transform: rotate(90deg);
-  }
-`;
-
-const MovieHeader = styled.div`
-  position: relative;
-  height: 300px;
-  background: linear-gradient(to bottom, transparent, ${({ theme }) => theme.colors.surface});
-  overflow: hidden;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    height: 200px;
-  }
-`;
-
-const BackdropImage = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.4);
-`;
-
-const MovieDetails = styled.div`
-  padding: ${({ theme }) => theme.spacing.xl};
-  padding-top: 0;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding: ${({ theme }) => theme.spacing.lg};
-  }
-`;
-
-const MovieTitleSection = styled.div`
-  margin-top: -100px;
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-  position: relative;
-  z-index: 2;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    margin-top: -50px;
-    margin-bottom: ${({ theme }) => theme.spacing.lg};
-  }
-`;
-
-const MovieTitle = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    font-size: 1.8rem;
-  }
-`;
-
-const MovieTagline = styled.p`
-  font-size: 1.2rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-style: italic;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    font-size: 1rem;
-  }
-`;
-
-const MovieMeta = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  flex-wrap: wrap;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    gap: ${({ theme }) => theme.spacing.md};
-  }
-`;
-
-const MetaItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const Rating = styled(MetaItem)`
-  color: ${({ theme }) => theme.colors.rating};
-  font-weight: 600;
-  font-size: 1.1rem;
-`;
-
-const MovieOverview = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-const OverviewText = styled.p`
-  line-height: 1.8;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 1.1rem;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    font-size: 1rem;
-  }
-`;
-
-const MovieAdditionalInfo = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: ${({ theme }) => theme.spacing.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`;
-
-const InfoSection = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-  padding: ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-`;
-
-const InfoTitle = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-`;
-
-const GenreList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.xs};
-`;
-
-const GenreTag = styled.span`
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
-  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  font-size: 0.9rem;
-`;
-
-const CastList = styled.div`
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const ActionButtons = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-top: ${({ theme }) => theme.spacing.xl};
-  padding-top: ${({ theme }) => theme.spacing.lg};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    flex-direction: column;
-  }
-`;
-
-interface ActionButtonProps {
-  variant?: 'favorite' | 'remove' | 'trailer';
-}
-
-const ActionButton = styled.button<ActionButtonProps>`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex: 1;
-  justify-content: center;
-
-  ${({ variant, theme }) => {
-    switch (variant) {
-      case 'favorite':
-        return `
-          background-color: ${theme.colors.primary};
-          color: white;
-          &:hover {
-            background-color: #f40612;
-          }
-        `;
-      case 'remove':
-        return `
-          background-color: ${theme.colors.error};
-          color: white;
-          &:hover {
-            background-color: #d60a02;
-          }
-        `;
-      case 'trailer':
-        return `
-          background-color: ${theme.colors.background};
-          color: ${theme.colors.text};
-          border: 2px solid ${theme.colors.border};
-          &:hover {
-            background-color: ${theme.colors.surface};
-            border-color: ${theme.colors.primary};
-          }
-        `;
-      default:
-        return '';
-    }
-  }}
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    width: 100%;
-  }
-`;
 
 const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, isFavorite = false, onFavoriteChange }) => {
   const { username, isLoggedIn } = useUser();
@@ -336,108 +68,128 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, isFavor
   };
 
   const modalContent = (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-6 sm:p-4" onClick={onClose}>
+      <div className="bg-surface rounded-large max-w-4xl max-h-[90vh] overflow-y-auto relative w-full sm:max-h-[100vh] sm:rounded-none sm:max-w-full" onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 bg-background text-text border-none rounded-full w-10 h-10 flex items-center justify-center cursor-pointer z-10 transition-all duration-200 hover:bg-error hover:rotate-90"
+        >
           <FiX size={24} />
-        </CloseButton>
+        </button>
 
-        <MovieHeader>
-          <BackdropImage
+        <div className="relative h-[300px] bg-gradient-to-b from-transparent to-surface overflow-hidden sm:h-[200px]">
+          <img
             src={movie.backdrop || movie.poster || ''}
             alt={`${movie.title} backdrop`}
+            className="absolute inset-0 w-full h-full object-cover brightness-[0.4]"
           />
-        </MovieHeader>
+        </div>
 
-        <MovieDetails>
-          <MovieTitleSection>
-            <MovieTitle>{movie.title}</MovieTitle>
+        <div className="px-8 pt-0 sm:px-6">
+          <div className="mt-[-100px] mb-8 relative z-2 sm:mt-[-50px] sm:mb-6">
+            <h1 className="text-[2.5rem] font-bold text-text mb-2 sm:text-[1.8rem]">
+              {movie.title}
+            </h1>
             {movie.originalTitle !== movie.title && (
-              <MovieTagline>{movie.originalTitle}</MovieTagline>
+              <p className="text-[1.2rem] text-textSecondary italic mb-3 sm:text-base">
+                {movie.originalTitle}
+              </p>
             )}
 
-            <MovieMeta>
-              <Rating>
+            <div className="flex gap-6 mb-6 flex-wrap sm:gap-4">
+              <div className="flex items-center gap-2 text-rating font-semibold text-[1.1rem]">
                 <FiStar size={20} />
                 {movie.rating ? `${movie.rating.toFixed(1)}/10` : 'N/A'}
-              </Rating>
+              </div>
 
-              <MetaItem>
+              <div className="flex items-center gap-2 text-text">
                 <FiCalendar size={18} />
                 {formatDate(movie.releaseDate)}
-              </MetaItem>
+              </div>
 
               {movie.runtime && (
-                <MetaItem>
+                <div className="flex items-center gap-2 text-text">
                   <FiClock size={18} />
                   {formatRuntime(movie.runtime)}
-                </MetaItem>
+                </div>
               )}
 
               {movie.director && (
-                <MetaItem>
+                <div className="flex items-center gap-2 text-text">
                   <FiUsers size={18} />
                   Diretor: {movie.director}
-                </MetaItem>
+                </div>
               )}
-            </MovieMeta>
-          </MovieTitleSection>
+            </div>
+          </div>
 
-          <MovieOverview>
-            <SectionTitle>Sinopse</SectionTitle>
-            <OverviewText>
+          <div className="mb-8">
+            <h2 className="text-[1.5rem] font-semibold text-text mb-4">Sinopse</h2>
+            <p className="leading-[1.8] text-textSecondary text-[1.1rem] sm:text-base">
               {movie.overview || 'Sinopse não disponível.'}
-            </OverviewText>
-          </MovieOverview>
+            </p>
+          </div>
 
-          <MovieAdditionalInfo>
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {movie.genres && movie.genres.length > 0 && (
-              <InfoSection>
-                <InfoTitle>Gêneros</InfoTitle>
-                <GenreList>
+              <div className="bg-background p-6 rounded-medium">
+                <h3 className="text-[1.1rem] font-semibold text-text mb-2">Gêneros</h3>
+                <div className="flex flex-wrap gap-2">
                   {movie.genres.map((genre) => (
-                    <GenreTag key={genre.id}>{genre.name}</GenreTag>
+                    <span key={genre.id} className="bg-primary text-white px-2 py-1 rounded-small text-sm">
+                      {genre.name}
+                    </span>
                   ))}
-                </GenreList>
-              </InfoSection>
+                </div>
+              </div>
             )}
 
             {movie.cast && movie.cast.length > 0 && (
-              <InfoSection>
-                <InfoTitle>Elenco Principal</InfoTitle>
-                <CastList>
+              <div className="bg-background p-6 rounded-medium">
+                <h3 className="text-[1.1rem] font-semibold text-text mb-2">Elenco Principal</h3>
+                <div className="text-textSecondary">
                   {movie.cast.slice(0, 5).join(', ')}
-                </CastList>
-              </InfoSection>
+                </div>
+              </div>
             )}
-          </MovieAdditionalInfo>
+          </div>
 
-          <ActionButtons>
+          <div className="flex gap-4 mt-8 pt-6 border-t border-border sm:flex-col">
             {isLoggedIn ? (
-              <ActionButton
-                variant={isFavorite ? 'remove' : 'favorite'}
+              <button
                 onClick={handleFavoriteClick}
+                className={`flex items-center gap-2 px-6 py-3 rounded-medium text-base font-semibold cursor-pointer transition-all duration-200 flex-1 justify-center ${
+                  isFavorite
+                    ? 'bg-error text-white hover:bg-red-700'
+                    : 'bg-primary text-white hover:bg-red-600'
+                } sm:w-full`}
               >
                 {isFavorite ? <FiHeart size={20} /> : <FiPlus size={20} />}
                 {isFavorite ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos'}
-              </ActionButton>
+              </button>
             ) : (
-              <ActionButton variant="favorite" disabled>
+              <button
+                disabled
+                className="bg-primary text-white px-6 py-3 rounded-medium text-base font-semibold flex items-center gap-2 transition-all duration-200 flex-1 justify-center sm:w-full disabled:opacity-60 disabled:cursor-not-allowed"
+              >
                 <FiPlus size={20} />
                 Adicionar aos Favoritos
-              </ActionButton>
+              </button>
             )}
 
             {movie.trailer && (
-              <ActionButton variant="trailer" onClick={handleTrailerClick}>
+              <button
+                onClick={handleTrailerClick}
+                className="bg-background text-text border-2 border-border px-6 py-3 rounded-medium text-base font-semibold cursor-pointer transition-all duration-200 flex-1 justify-center hover:bg-surface hover:border-primary sm:w-full"
+              >
                 <FiPlay size={20} />
                 Assistir Trailer
-              </ActionButton>
+              </button>
             )}
-          </ActionButtons>
-        </MovieDetails>
-      </ModalContent>
-    </ModalOverlay>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   return createPortal(modalContent, document.body);

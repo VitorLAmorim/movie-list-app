@@ -1,233 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import { FiSearch, FiUser, FiLogOut, FiFilm, FiHeart } from 'react-icons/fi';
 import { useUser } from '../hooks/useUser';
-
-const HeaderContainer = styled.header`
-  background-color: ${({ theme }) => theme.colors.surface};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.sm};
-  }
-`;
-
-const HeaderContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.lg};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    gap: ${({ theme }) => theme.spacing.sm};
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 380px) {
-    gap: ${({ theme }) => theme.spacing.xs};
-  }
-`;
-
-const Logo = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.primary};
-  text-decoration: none;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.text};
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    font-size: 1.2rem;
-    gap: ${({ theme }) => theme.spacing.xs};
-    flex-shrink: 0;
-  }
-
-  @media (max-width: 380px) {
-    font-size: 1rem;
-  }
-`;
-
-const Navigation = styled.nav`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.lg};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    gap: ${({ theme }) => theme.spacing.md};
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    gap: ${({ theme }) => theme.spacing.sm};
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    margin-top: ${({ theme }) => theme.spacing.xs};
-  }
-`;
-
-const NavLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.text};
-  font-weight: 500;
-  padding: ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  transition: all 0.2s ease;
-  text-decoration: none;
-  white-space: nowrap;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.text};
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
-    font-size: 0.9rem;
-    gap: ${({ theme }) => theme.spacing.xs};
-    flex: 1;
-    justify-content: center;
-    min-width: 0;
-  }
-
-  .search-text {
-    @media (max-width: 480px) {
-      display: none;
-    }
-  }
-`;
-
-const SearchContainer = styled.div`
-  flex: 1;
-  max-width: 500px;
-  position: relative;
-  order: 2;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    display: none;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    order: 2;
-    max-width: 200px;
-  }
-
-  @media (max-width: 380px) {
-    max-width: 150px;
-  }
-`;
-
-const SearchInput = styled.input`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
-  padding-left: 2.5rem;
-  background-color: ${({ theme }) => theme.colors.background};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.large};
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 0.9rem;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.primary};
-    outline: none;
-  }
-`;
-
-const SearchIcon = styled(FiSearch)`
-  position: absolute;
-  left: ${({ theme }) => theme.spacing.sm};
-  top: 50%;
-  transform: translateY(-50%);
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const UserSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  order: 3;
-  flex-shrink: 0;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    gap: ${({ theme }) => theme.spacing.sm};
-    order: 1;
-  }
-
-  @media (max-width: 380px) {
-    gap: ${({ theme }) => theme.spacing.xs};
-  }
-`;
-
-const UserGreeting = styled.span`
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 0.9rem;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    display: none;
-  }
-`;
-
-const LoginButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  white-space: nowrap;
-  min-height: 40px;
-
-  &:hover {
-    background-color: #f40612;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
-    font-size: 0.9rem;
-    min-height: 36px;
-  }
-
-  @media (max-width: 380px) {
-    font-size: 0.8rem;
-    padding: ${({ theme }) => theme.spacing.xs};
-  }
-`;
-
-const LogoutButton = styled.button`
-  background-color: transparent;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  padding: ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.error};
-    background-color: ${({ theme }) => theme.colors.background};
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: ${({ theme }) => theme.spacing.xs};
-    min-height: 36px;
-  }
-`;
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -248,58 +22,82 @@ const Header = () => {
   };
 
   return (
-    <HeaderContainer>
-      <HeaderContent>
-        <Logo to="/">
-          <FiFilm size={24} />
-          MovieList
-        </Logo>
+    <header className="sticky top-0 z-50 bg-surface border-b border-border px-4 py-2 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto w-full flex justify-between items-center gap-4 flex-wrap">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-xl font-bold text-primary hover:text-white transition-colors duration-200 flex-shrink-0 sm:text-lg sm:gap-1 text-base"
+        >
+          <FiFilm size={24} className="w-6 h-6" />
+          <span className="hidden sm:inline">MovieList</span>
+        </Link>
 
-        <Navigation>
-          <NavLink to="/">
-            <FiSearch size={18} />
-            <span className="search-text">
-              Pesquisar
-            </span>
-          </NavLink>
+        {/* Navigation */}
+        <nav className="flex items-center gap-4 md:gap-3 sm:gap-2 order-3 w-full justify-center mt-2 flex-1 justify-center min-w-0">
+          <Link
+            to="/"
+            className="flex items-center gap-1 text-text font-medium px-3 py-2 rounded-small hover:bg-primary hover:text-white transition-all duration-200 whitespace-nowrap sm:px-2 sm:py-1 sm:text-sm sm:gap-1 flex-1 justify-center min-w-0"
+          >
+            <FiSearch size={18} className="w-4 h-4" />
+            <span className="hidden sm:inline">Pesquisar</span>
+          </Link>
 
           {isLoggedIn && (
-            <NavLink to="/favorites">
-              <FiHeart size={18} />
-              Favoritos
-            </NavLink>
+            <Link
+              to="/favorites"
+              className="flex items-center gap-1 text-text font-medium px-3 py-2 rounded-small hover:bg-primary hover:text-white transition-all duration-200 whitespace-nowrap sm:px-2 sm:py-1 sm:text-sm sm:gap-1 flex-1 justify-center min-w-0"
+            >
+              <FiHeart size={18} className="w-4 h-4" />
+              <span className="hidden sm:inline">Favoritos</span>
+            </Link>
           )}
-        </Navigation>
+        </nav>
 
-        <SearchContainer>
+        {/* Search - Hidden on tablet, visible on desktop */}
+        <div className="flex-1 max-w-md relative order-2 hidden md:block sm:max-w-xs">
           <form onSubmit={handleSearch}>
-            <SearchInput
+            <input
               type="text"
               placeholder="Buscar filmes..."
               value={searchQuery}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 pl-10 bg-background border border-border rounded-large text-text text-sm focus:outline-none focus:border-primary"
             />
-            <SearchIcon size={18} />
+            <FiSearch
+              size={18}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary w-4 h-4"
+            />
           </form>
-        </SearchContainer>
+        </div>
 
-        <UserSection>
+        {/* User Section */}
+        <div className="flex items-center gap-3 md:gap-2 sm:gap-2 order-1 flex-shrink-0">
           {isLoggedIn ? (
             <>
-              <UserGreeting>Olá, {username}</UserGreeting>
-              <LogoutButton onClick={handleLogout} title="Sair">
-                <FiLogOut size={20} />
-              </LogoutButton>
+              <span className="text-textSecondary text-sm hidden md:block">
+                Olá, {username}
+              </span>
+              <button
+                onClick={handleLogout}
+                title="Sair"
+                className="bg-transparent text-textSecondary p-2 rounded-small hover:text-error hover:bg-background transition-all duration-200 min-h-10 sm:p-1 sm:min-h-9"
+              >
+                <FiLogOut size={20} className="w-5 h-5" />
+              </button>
             </>
           ) : (
-            <LoginButton onClick={() => navigate('/?login=true')}>
-              <FiUser size={18} />
+            <button
+              onClick={() => navigate('/?login=true')}
+              className="bg-primary text-white px-4 py-2 rounded-small font-medium flex items-center gap-1 hover:bg-red-600 transition-all duration-200 whitespace-nowrap min-h-10 sm:px-3 sm:py-1 sm:text-sm"
+            >
+              <FiUser size={18} className="w-4 h-4" />
               Entrar
-            </LoginButton>
+            </button>
           )}
-        </UserSection>
-      </HeaderContent>
-    </HeaderContainer>
+        </div>
+      </div>
+    </header>
   );
 };
 

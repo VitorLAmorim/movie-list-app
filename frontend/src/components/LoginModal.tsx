@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
 import { FiX, FiUser, FiLogIn, FiUserPlus } from 'react-icons/fi';
 import { useUser } from '../hooks/useUser';
 import { toast } from 'react-toastify';
@@ -10,210 +9,6 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: ${({ theme }) => theme.spacing.lg};
-`;
-
-const ModalContent = styled.div`
-  background-color: ${({ theme }) => theme.colors.surface};
-  border-radius: ${({ theme }) => theme.borderRadius.large};
-  padding: ${({ theme }) => theme.spacing.xl};
-  max-width: 400px;
-  width: 100%;
-  position: relative;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: ${({ theme }) => theme.spacing.lg};
-  }
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: ${({ theme }) => theme.spacing.md};
-  right: ${({ theme }) => theme.spacing.md};
-  background-color: transparent;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.background};
-    color: ${({ theme }) => theme.colors.text};
-  }
-`;
-
-const LoginHeader = styled.div`
-  text-align: center;
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`;
-
-const LoginIcon = styled.div`
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto ${({ theme }) => theme.spacing.lg};
-`;
-
-const LoginTitle = styled.h2`
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-`;
-
-const LoginSubtitle = styled.p`
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 1rem;
-`;
-
-const LoginForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.lg};
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-
-const Label = styled.label`
-  color: ${({ theme }) => theme.colors.text};
-  font-weight: 500;
-  font-size: 0.9rem;
-`;
-
-const Input = styled.input`
-  padding: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.colors.background};
-  border: 2px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 1rem;
-  transition: all 0.2s ease;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.primary};
-    outline: none;
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.textSecondary};
-  }
-`;
-
-const LoginButton = styled.button`
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-  color: white;
-  padding: ${({ theme }) => theme.spacing.lg};
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  transition: all 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(229, 9, 20, 0.3);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-`;
-
-const InfoMessage = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-  border-left: 4px solid ${({ theme }) => theme.colors.primary};
-  padding: ${({ theme }) => theme.spacing.md};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  margin-top: ${({ theme }) => theme.spacing.lg};
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 0.9rem;
-`;
-
-const TabContainer = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-  background-color: ${({ theme }) => theme.colors.background};
-  padding: ${({ theme }) => theme.spacing.xs};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-`;
-
-const TabButton = styled.button<{ $isActive: boolean }>`
-  flex: 1;
-  padding: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme, $isActive }) =>
-    $isActive ? theme.colors.primary : 'transparent'
-  };
-  color: ${({ theme, $isActive }) =>
-    $isActive ? 'white' : theme.colors.textSecondary
-  };
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${({ theme, $isActive }) =>
-      $isActive ? theme.colors.primary : theme.colors.surface
-    };
-  }
-`;
-
-const ErrorMessage = styled.div`
-  background-color: ${({ theme }) => theme.colors.error};
-  color: white;
-  padding: ${({ theme }) => theme.spacing.md};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const ErrorCloseButton = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 0;
-  margin-left: ${({ theme }) => theme.spacing.sm};
-`;
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -299,57 +94,73 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const modalContent = (
-    <ModalOverlay onClick={handleClose}>
-      <ModalContent onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
-        <CloseButton onClick={handleClose} disabled={isLoading}>
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-6" onClick={handleClose}>
+      <div className="bg-surface rounded-large p-8 max-w-md w-full relative sm:p-6" onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}>
+        <button
+          onClick={handleClose}
+          disabled={isLoading}
+          className="absolute top-4 right-4 bg-transparent text-textSecondary border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-background hover:text-text disabled:cursor-not-allowed"
+        >
           <FiX size={20} />
-        </CloseButton>
+        </button>
 
-        <LoginHeader>
-          <LoginIcon>
+        <div className="text-center mb-8">
+          <div className="bg-gradient-to-br from-primary to-accent w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
             <FiUser size={40} color="white" />
-          </LoginIcon>
-          <LoginTitle>
+          </div>
+          <h2 className="text-[1.8rem] font-semibold text-text mb-2">
             {activeTab === 'login' ? 'Entrar' : 'Criar Conta'}
-          </LoginTitle>
-          <LoginSubtitle>
+          </h2>
+          <p className="text-textSecondary text-base">
             {activeTab === 'login'
               ? 'Acesse sua lista de filmes favoritos'
               : 'Crie sua lista de filmes favoritos pessoais'
             }
-          </LoginSubtitle>
-        </LoginHeader>
+          </p>
+        </div>
 
-        <TabContainer>
-          <TabButton
+        <div className="flex gap-2 mb-8 bg-background p-2 rounded-medium">
+          <button
             type="button"
-            $isActive={activeTab === 'login'}
             onClick={() => switchTab('login')}
             disabled={isLoading}
+            className={`flex-1 py-3 rounded-small font-semibold cursor-pointer transition-all duration-200 ${
+              activeTab === 'login'
+                ? 'bg-primary text-white'
+                : 'bg-transparent text-textSecondary hover:bg-surface'
+            } disabled:cursor-not-allowed`}
           >
             Entrar
-          </TabButton>
-          <TabButton
+          </button>
+          <button
             type="button"
-            $isActive={activeTab === 'register'}
             onClick={() => switchTab('register')}
             disabled={isLoading}
+            className={`flex-1 py-3 rounded-small font-semibold cursor-pointer transition-all duration-200 ${
+              activeTab === 'register'
+                ? 'bg-primary text-white'
+                : 'bg-transparent text-textSecondary hover:bg-surface'
+            } disabled:cursor-not-allowed`}
           >
             Criar Conta
-          </TabButton>
-        </TabContainer>
+          </button>
+        </div>
 
         {error && (
-          <ErrorMessage>
+          <div className="bg-error text-white px-4 py-3 rounded-small mb-6 text-sm flex items-center justify-between">
             {error}
-            <ErrorCloseButton onClick={() => setError('')}>×</ErrorCloseButton>
-          </ErrorMessage>
+            <button onClick={() => setError('')} className="bg-none border-none text-white cursor-pointer text-lg p-0 ml-2">
+              ×
+            </button>
+          </div>
         )}
 
-        <LoginForm onSubmit={handleSubmit}>
-          <InputGroup>
-            <Label htmlFor="username">Nome de usuário</Label>
-            <Input
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="username" className="text-text font-medium text-sm">
+              Nome de usuário
+            </label>
+            <input
               id="username"
               type="text"
               value={username}
@@ -358,12 +169,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               autoComplete="username"
               required
               disabled={isLoading}
+              className="py-3 bg-background border-2 border-border rounded-medium text-text text-base transition-all duration-200 focus:border-primary focus:outline-none placeholder:text-textSecondary disabled:opacity-60 disabled:cursor-not-allowed"
             />
-          </InputGroup>
+          </div>
 
-          <InputGroup>
-            <Label htmlFor="password">Senha</Label>
-            <Input
+          <div className="flex flex-col gap-2">
+            <label htmlFor="password" className="text-text font-medium text-sm">
+              Senha
+            </label>
+            <input
               id="password"
               type="password"
               value={password}
@@ -372,13 +186,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               autoComplete={activeTab === 'login' ? 'current-password' : 'new-password'}
               required
               disabled={isLoading}
+              className="py-3 bg-background border-2 border-border rounded-medium text-text text-base transition-all duration-200 focus:border-primary focus:outline-none placeholder:text-textSecondary disabled:opacity-60 disabled:cursor-not-allowed"
             />
-          </InputGroup>
+          </div>
 
           {activeTab === 'register' && (
-            <InputGroup>
-              <Label htmlFor="confirmPassword">Confirmar senha</Label>
-              <Input
+            <div className="flex flex-col gap-2">
+              <label htmlFor="confirmPassword" className="text-text font-medium text-sm">
+                Confirmar senha
+              </label>
+              <input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
@@ -387,13 +204,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 autoComplete="new-password"
                 required
                 disabled={isLoading}
+                className="py-3 bg-background border-2 border-border rounded-medium text-text text-base transition-all duration-200 focus:border-primary focus:outline-none placeholder:text-textSecondary disabled:opacity-60 disabled:cursor-not-allowed"
               />
-            </InputGroup>
+            </div>
           )}
 
-          <LoginButton
+          <button
             type="submit"
             disabled={isLoading || !username.trim() || (activeTab === 'register' && (!password || password !== confirmPassword))}
+            className="bg-gradient-to-br from-primary to-accent text-white py-4 border-none rounded-medium text-[1.1rem] font-semibold cursor-pointer flex items-center justify-center gap-2 transition-all duration-200 hover:transform hover:translate-y-[-2px] hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
           >
             {isLoading ? (
               activeTab === 'login' ? 'Entrando...' : 'Criando...'
@@ -403,10 +222,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 {activeTab === 'login' ? 'Entrar' : 'Criar Conta'}
               </>
             )}
-          </LoginButton>
-        </LoginForm>
+          </button>
+        </form>
 
-        <InfoMessage>
+        <div className="bg-background border-l-4 border-primary px-4 py-3 rounded-small mt-6 text-textSecondary text-sm">
           {activeTab === 'login' ? (
             <>
               💡 Dica: Se ainda não tem uma conta, clique em "Criar Conta" para se registrar.
@@ -416,9 +235,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               💡 Dica: Escolha um nome de usuário único e uma senha segura (mínimo 6 caracteres).
             </>
           )}
-        </InfoMessage>
-      </ModalContent>
-    </ModalOverlay>
+        </div>
+      </div>
+    </div>
   );
 
   return createPortal(modalContent, document.body);

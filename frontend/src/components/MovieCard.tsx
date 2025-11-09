@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { FiHeart, FiPlus, FiStar, FiCalendar, FiInfo, FiFilm } from 'react-icons/fi';
 import { useUser } from '../hooks/useUser';
 import { favoritesAPI } from '../services/api';
@@ -15,177 +14,6 @@ interface MovieCardProps {
   showActions?: boolean;
   variant?: 'add' | 'remove';
 }
-
-const MovieCardContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.surface};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  overflow: hidden;
-  box-shadow: ${({ theme }) => theme.shadows.medium};
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: ${({ theme }) => theme.shadows.large};
-  }
-`;
-
-const MoviePoster = styled.div`
-  position: relative;
-  width: 100%;
-  padding-bottom: 150%;
-  background-color: ${({ theme }) => theme.colors.background};
-  overflow: hidden;
-`;
-
-const PosterImage = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-
-  ${MovieCardContainer}:hover & {
-    transform: scale(1.05);
-  }
-`;
-
-const PosterPlaceholder = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.surface}, ${({ theme }) => theme.colors.background});
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-const MovieInfo = styled.div`
-  padding: ${({ theme }) => theme.spacing.md};
-`;
-
-const MovieTitle = styled.h3`
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.text};
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.4;
-  min-height: 2.8em; /* Força altura de duas linhas (1.4 * 2 = 2.8) */
-
-  @media (min-width: 480px) {
-    font-size: 1rem;
-    line-height: 1.4;
-    min-height: 2.8em; /* Mantém altura consistente */
-  }
-
-  @media (max-width: 380px) {
-    font-size: 0.85rem;
-    line-height: 1.4;
-    min-height: 2.4em; /* Ajustado para fonte menor */
-  }
-`;
-
-const MovieMeta = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-`;
-
-const Rating = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.rating};
-  font-weight: 600;
-`;
-
-const Year = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 0.9rem;
-`;
-
-const MovieActions = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-top: ${({ theme }) => theme.spacing.sm};
-  flex-direction: column;
-
-  @media (min-width: 480px) {
-    flex-direction: row;
-  }
-`;
-
-interface ActionButtonProps {
-  variant?: 'favorite' | 'remove' | 'details';
-}
-
-const ActionButton = styled.button<ActionButtonProps>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  width: 100%;
-  min-height: 40px;
-
-  @media (min-width: 480px) {
-    flex: 1;
-    font-size: 0.9rem;
-    padding: ${({ theme }) => theme.spacing.sm};
-  }
-
-  ${({ variant, theme }) => {
-    switch (variant) {
-      case 'favorite':
-        return `
-          background-color: ${theme.colors.primary};
-          color: white;
-          &:hover {
-            background-color: #f40612;
-          }
-        `;
-      case 'remove':
-        return `
-          background-color: ${theme.colors.error};
-          color: white;
-          &:hover {
-            background-color: #d60a02;
-          }
-        `;
-      case 'details':
-        return `
-          background-color: ${theme.colors.background};
-          color: ${theme.colors.text};
-          border: 1px solid ${theme.colors.border};
-          &:hover {
-            background-color: ${theme.colors.surface};
-            border-color: ${theme.colors.primary};
-          }
-        `;
-      default:
-        return '';
-    }
-  }}
-`;
 
 const MovieCard: React.FC<MovieCardProps> = ({
   movie,
@@ -240,68 +68,84 @@ const MovieCard: React.FC<MovieCardProps> = ({
   };
 
   return (
-    <MovieCardContainer onClick={handleCardClick}>
-      <MoviePoster>
+    <div
+      onClick={handleCardClick}
+      className="bg-surface rounded-medium shadow-medium overflow-hidden transition-all duration-300 relative cursor-pointer hover:translate-y-[-5px] hover:shadow-large group"
+    >
+      {/* Movie Poster */}
+      <div className="relative w-full aspect-movie bg-background overflow-hidden">
         {movie.poster ? (
-          <PosterImage
+          <img
             src={movie.poster}
             alt={`${movie.title} poster`}
             loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <PosterPlaceholder>
-            <FiFilm size={48} />
-            <span>Sem Imagem</span>
-          </PosterPlaceholder>
+          <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-surface to-background text-text-secondary">
+            <FiFilm size={48} className="w-12 h-12" />
+            <span className="mt-2">Sem Imagem</span>
+          </div>
         )}
-      </MoviePoster>
+      </div>
 
-      <MovieInfo>
-        <MovieTitle>{movie.title}</MovieTitle>
+      {/* Movie Info */}
+      <div className="p-4">
+        <h3 className="text-sm font-semibold text-text mb-1 line-clamp-2 leading-tight min-h-[2.8em] sm:text-base sm:min-h-[2.8em] text-xs sm:min-h-[2.4em]">
+          {movie.title}
+        </h3>
 
-        <MovieMeta>
-          <Rating>
-            <FiStar size={16} />
-            {movie.rating ? movie.rating.toFixed(1) : 'N/A'}
-          </Rating>
-          <Year>
-            <FiCalendar size={14} />
-            {formatDate(movie.releaseDate)}
-          </Year>
-        </MovieMeta>
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-1 text-rating font-semibold">
+            <FiStar size={16} className="w-4 h-4" />
+            <span className="text-sm">{movie.rating ? movie.rating.toFixed(1) : 'N/A'}</span>
+          </div>
+          <div className="flex items-center gap-1 text-textSecondary text-sm">
+            <FiCalendar size={14} className="w-3.5 h-3.5" />
+            <span>{formatDate(movie.releaseDate)}</span>
+          </div>
+        </div>
 
+        {/* Actions */}
         {showActions && (
-          <MovieActions>
+          <div className="flex gap-2 mt-2 flex-col sm:flex-row">
             {isLoggedIn ? (
-              <ActionButton
-                variant={variant === 'add' ? 'favorite' : 'remove'}
+              <button
                 onClick={handleFavoriteClick}
                 disabled={isLoading}
+                className={`${
+                  variant === 'add'
+                    ? 'bg-primary hover:bg-red-600'
+                    : 'bg-error hover:bg-red-700'
+                } text-white px-3 py-2 rounded-small font-medium flex items-center justify-center gap-1 transition-all duration-200 w-full min-h-10 sm:flex-1 sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed`}
               >
-                {variant === 'add' ? <FiPlus size={16} /> : <FiHeart size={16} />}
+                {variant === 'add' ? <FiPlus size={16} className="w-4 h-4" /> : <FiHeart size={16} className="w-4 h-4" />}
                 {variant === 'add' ? 'Favoritar' : 'Remover'}
-              </ActionButton>
+              </button>
             ) : (
-              <ActionButton variant="favorite" disabled>
-                <FiPlus size={16} />
+              <button
+                disabled
+                className="bg-primary text-white px-3 py-2 rounded-small font-medium flex items-center justify-center gap-1 transition-all duration-200 w-full min-h-10 sm:flex-1 sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <FiPlus size={16} className="w-4 h-4" />
                 Favoritar
-              </ActionButton>
+              </button>
             )}
 
-            <ActionButton
-              variant="details"
+            <button
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 handleCardClick();
               }}
+              className="bg-background text-text border border-border px-3 py-2 rounded-small font-medium flex items-center justify-center gap-1 transition-all duration-200 w-full min-h-10 sm:flex-1 sm:text-sm hover:bg-surface hover:border-primary"
             >
-              <FiInfo size={16} />
+              <FiInfo size={16} className="w-4 h-4" />
               Detalhes
-            </ActionButton>
-          </MovieActions>
+            </button>
+          </div>
         )}
-      </MovieInfo>
-    </MovieCardContainer>
+      </div>
+    </div>
   );
 };
 

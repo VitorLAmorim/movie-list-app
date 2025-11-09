@@ -16,7 +16,9 @@
       "Bash(wmic process where ProcessId=13476 delete:*)",
       "Bash(curl:*)",
       "Bash(wmic:*)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(npx tailwindcss@latest init:*)"
     ],
     "deny": [],
     "ask": []

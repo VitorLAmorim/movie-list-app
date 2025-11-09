@@ -11,7 +11,12 @@
     "build:backend": "cd backend && npm run build",
     "build:frontend": "cd frontend && npm run build",
     "build": "npm run build:backend && npm run build:frontend",
-    "clean": "cd backend && npm run clean && cd ../frontend && rm -rf build node_modules package-lock.json && npm install"
+    "clean": "cd backend && npm run clean && cd ../frontend && rm -rf build node_modules package-lock.json && npm install",
+    "deploy:backend": "cd backend && npm run build && railway up",
+    "deploy:frontend": "cd frontend && npm run build && railway up",
+    "deploy": "npm run build && railway up",
+    "railway:login": "railway login",
+    "railway:link": "railway link"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"

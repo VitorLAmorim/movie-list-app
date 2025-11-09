@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #000000;
+    color: #ffffff;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-width: 320px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply font-sans cursor-pointer border-none outline-none transition-all duration-200 font-medium px-4 py-2 rounded-small;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-red-600;
+  }
+
+  .btn-secondary {
+    @apply bg-surface text-text border border-border hover:bg-surface;
+  }
+
+  .btn-danger {
+    @apply bg-error text-white hover:bg-red-700;
+  }
+
+  .input {
+    @apply font-sans outline-none border border-border bg-surface text-text px-4 py-2 rounded-small;
+  }
+
+  .input:focus {
+    @apply border-primary;
+  }
+
+  .card {
+    @apply bg-surface rounded-large shadow-medium overflow-hidden transition-transform duration-300 hover:translate-y-[-5px] hover:shadow-large;
+  }
+
+  .loading-spinner {
+    @apply w-12 h-12 border-4 border-border border-t-primary rounded-full animate-spin;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .aspect-movie {
+    aspect-ratio: 2 / 3;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-surface;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-textSecondary;
+}
+
+/* Animation keyframes */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

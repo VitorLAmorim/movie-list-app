@@ -1,12 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-import GlobalStyles from './styles/GlobalStyles';
-import theme, { DefaultTheme } from './styles/theme';
-import './styled.d.ts';
+import { Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
@@ -17,33 +10,18 @@ import { UserProvider } from './hooks/useUser';
 
 function App() {
   return (
-    <ThemeProvider theme={theme as DefaultTheme}>
-      <UserProvider>
-        <Router>
-          <GlobalStyles />
-          <Header />
-          <main>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/favorites" element={<FavoritesPage />} />
-              <Route path="/shared/:shareToken" element={<SharedListPage />} />
-            </Routes>
-          </main>
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="colored"
-          />
-        </Router>
-      </UserProvider>
-    </ThemeProvider>
+    <UserProvider>
+      <div className="min-h-screen bg-background text-text">
+        <Header />
+        <main className="min-h-[calc(100vh-80px)] p-6 md:p-8">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/shared/:shareToken" element={<SharedListPage />} />
+          </Routes>
+        </main>
+      </div>
+    </UserProvider>
   );
 }
 
