@@ -63,13 +63,18 @@ app.use('*', (req: Request, res: Response) => {
   res.status(404).json({ error: 'Rota não encontrada' });
 });
 
-// Inicializar tabelas do banco de dados
-initTables().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-    console.log(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
+// Inicializar tabelas do banco de dados (apenas quando não estiver em teste)
+if (process.env.NODE_ENV !== 'test') {
+  initTables().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando na porta ${PORT}`);
+      console.log(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    });
+  }).catch((error: Error) => {
+    console.error('Erro ao inicializar o banco de dados:', error);
+    process.exit(1);
   });
-}).catch((error: Error) => {
-  console.error('Erro ao inicializar o banco de dados:', error);
-  process.exit(1);
-});
+}
+
+// Exportar app para testes
+export default app;

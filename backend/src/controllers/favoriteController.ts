@@ -57,12 +57,12 @@ class FavoriteController {
       }
 
       const movieData = req.body.movieData || {
-        id: parseInt(movieId),
-        title: req.body.movieTitle || 'Filme sem título',
-        poster_path: req.body.moviePoster || null,
-        vote_average: parseFloat(req.body.movieRating || '0') || 0,
-        release_date: req.body.movieReleaseDate || null,
-        overview: req.body.movieOverview || ''
+          id: parseInt(movieId),
+          title: req.body.movieTitle || 'Filme sem título',
+          poster: req.body.moviePoster || null,
+          rating: parseFloat(req.body.movieRating || '0') || 0,
+          releaseDate: req.body.movieReleaseDate || null,
+          overview: req.body.movieOverview || ''
       };
 
       const favorite = await Favorite.add(user.id, movieData);

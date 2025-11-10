@@ -18,7 +18,10 @@
       "Bash(wmic:*)",
       "Bash(npm start)",
       "Bash(npx tailwindcss init:*)",
-      "Bash(npx tailwindcss@latest init:*)"
+      "Bash(npx tailwindcss@latest init:*)",
+      "Bash(npm test)",
+      "Bash(npm test:*)",
+      "Bash(npm run test:coverage:*)"
     ],
     "deny": [],
     "ask": []
